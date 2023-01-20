@@ -22,7 +22,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class MovieServiceTest {
 
@@ -124,5 +125,24 @@ public class MovieServiceTest {
 
         assertNotNull(updateMovie);
         assertEquals("Fantasy",updateMovie.getGenera());
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    @Test
+    @DisplayName("Return delete the Movie from database")
+    public void deleteMovie(){
+        Movie avatarMovie = new Movie();
+        avatarMovie.setId(1L);
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+
+        when(movieRepository.findById(anyLong())).thenReturn(Optional.of(avatarMovie));
+        doNothing().when(movieRepository).delete(any(Movie.class));
+
+        movieService.deleteMovie(1L);
+
+        verify(movieRepository,times(1)).delete(avatarMovie);
+
     }
 }
