@@ -1,6 +1,5 @@
 package springboot.Junit.repository;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -23,7 +21,7 @@ public class MovieRepositoryTest {
     private MovieRepository movieRepository;
     @Test
     @DisplayName("save the movie to the database")
-    void save(){
+    public void save(){
         //Arrange
         Movie avatarMovie = new Movie();
         avatarMovie.setName("Avatar");
@@ -134,6 +132,31 @@ public class MovieRepositoryTest {
         //Assert(then)
         assertEquals(1,movieList.size());
         assertThat(existingMovie).isEmpty();
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    @Test
+    @DisplayName("return movies list with genera ROMANCE")
+    public void getMovieByGenera(){
+        //Arrange
+        Movie avatarMovie = new Movie();
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+        movieRepository.save(avatarMovie);
+
+        Movie titanicMovie = new Movie();
+        avatarMovie.setName("Titanic");
+        avatarMovie.setGenera("Romantic");
+        avatarMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
+        movieRepository.save(titanicMovie);
+
+        //Act(when)
+        List<Movie> movieList = movieRepository.findByGenera("Romantic");
+
+        //Assert(then)
+        assertNotNull(movieList);
+        assertThat(movieList.size()).isEqualTo(1);
     }
 }
 
