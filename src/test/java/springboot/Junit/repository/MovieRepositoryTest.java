@@ -33,9 +33,9 @@ public class MovieRepositoryTest {
         avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
 
         titanicMovie = new Movie();
-        avatarMovie.setName("Titanic");
-        avatarMovie.setGenera("Romantic");
-        avatarMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
+        titanicMovie.setName("Titanic");
+        titanicMovie.setGenera("Romantic");
+        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
     }
     @Test
     @DisplayName("save the movie to the database")
@@ -90,10 +90,11 @@ public class MovieRepositoryTest {
     void getMovieById(){
 
         //Arrange
-        Movie avatarMovie = new Movie();
+       /*Movie avatarMovie = new Movie();
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
         avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+        */
         movieRepository.save(avatarMovie);
 
         //Act(when)
@@ -111,11 +112,13 @@ public class MovieRepositoryTest {
     void updateMovie(){
 
         //Arrange
-        Movie avatarMovie = new Movie();
+       /* Movie avatarMovie = new Movie();
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
         avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+        */
         movieRepository.save(avatarMovie);
+
         Movie existingMovie =movieRepository.findById(avatarMovie.getId()).get();
 
         //Act(when)
@@ -174,7 +177,6 @@ public class MovieRepositoryTest {
         avatarMovie.setName("Titanic");
         avatarMovie.setGenera("Romantic");
         avatarMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
-
    */
         movieRepository.save(titanicMovie);
 
