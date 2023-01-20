@@ -1,5 +1,6 @@
 package springboot.Junit.service;
 
+import springboot.Junit.service.MovieService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -103,5 +104,25 @@ public class MovieServiceTest {
         assertThrows(RuntimeException.class, ()->{
             movieService.getMovieById(2L);
         });
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    @Test
+    @DisplayName("update the Movie into database")
+    public void updateMovie(){
+        Movie avatarMovie = new Movie();
+        avatarMovie.setId(1L);
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+
+        when(movieRepository.findById(anyLong())).thenReturn(Optional.of(avatarMovie));
+        when(movieRepository.save(any(Movie.class))).thenReturn(avatarMovie);
+        avatarMovie.setGenera("Fantasy");
+
+        Movie updateMovie = movieService.updateMovie(avatarMovie, 1L);
+
+        assertNotNull(updateMovie);
+        assertEquals("Fantasy",updateMovie.getGenera());
     }
 }
