@@ -118,6 +118,25 @@ public class MovieControllerTest {
 
         this.mockMvc.perform(delete("/movies/{id}",1L))
                 .andExpect(status().isNoContent());
+    }
 
+    /////////////////////////////////////////////////////////////////////////////////////
+    @Test
+    @DisplayName("Test Controller for update Movie 'By Id'")
+    public void shouldUpdateMovie() throws Exception {
+        Movie avatarMovie = new Movie();
+        avatarMovie.setId(1L);
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        when(movieService.updateMovie(any(Movie.class),anyLong())).thenReturn(avatarMovie);
+
+        this.mockMvc.perform(put("/movies/{id}",1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(avatarMovie)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",is(avatarMovie.getName())))
+                .andExpect(jsonPath("$.genera",is(avatarMovie.getGenera())));
     }
     }
