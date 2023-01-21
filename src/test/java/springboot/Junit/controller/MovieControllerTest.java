@@ -13,6 +13,8 @@ import springboot.Junit.service.MovieService;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,6 +54,32 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("$.name",is(avatarMovie.getName())))
                 .andExpect(jsonPath("$.genera",is(avatarMovie.getGenera())))
                 .andExpect(jsonPath("$.releaseDate",is(avatarMovie.getReleaseDate().toString())));
-
 }
+
+/////////////////////////////////////////////////////////////////////////////////////
+    @Test
+    @DisplayName("Test Controller for get All Movie Objects")
+    public void shouldFetchAllMovies() throws Exception {
+        Movie avatarMovie = new Movie();
+        avatarMovie.setId(1L);
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+
+        Movie titanicMovie = new Movie();
+        avatarMovie.setId(2L);
+        titanicMovie.setName("Titanic");
+        titanicMovie.setGenera("Romantic");
+        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
+
+        List<Movie> movieList = new ArrayList<>();
+        movieList.add(avatarMovie);
+        movieList.add(titanicMovie);
+
+        when(movieService.getAllMovies()).thenReturn(movieList);
+
+        this.mockMvc.perform(get("/movies"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()",is(movieList.size())));
+    }
 }
