@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import springboot.Junit.model.Movie;
 import springboot.Junit.service.MovieService;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -100,5 +102,22 @@ public class MovieControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name",is(avatarMovie.getName())))
                 .andExpect(jsonPath("$.genera", is(avatarMovie.getGenera())));
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    @Test
+    @DisplayName("Test Controller for Delete Movie 'By Id'")
+    public void shouldDeleteMovie() throws Exception {
+        Movie avatarMovie = new Movie();
+        avatarMovie.setId(1L);
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        doNothing().when(movieService).deleteMovie(anyLong());
+
+        this.mockMvc.perform(delete("/movies/{id}",1L))
+                .andExpect(status().isNoContent());
+
     }
     }

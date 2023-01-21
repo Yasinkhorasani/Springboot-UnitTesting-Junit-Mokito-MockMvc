@@ -33,7 +33,7 @@ public class MovieController {
     public Movie update(@PathVariable Long id, @RequestBody Movie movie){
         return movieService.updateMovie(movie,id);
     }
-    @DeleteMapping
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         movieService.deleteMovie(id);
