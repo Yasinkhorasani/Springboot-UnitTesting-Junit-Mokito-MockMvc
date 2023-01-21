@@ -1,6 +1,7 @@
 package springboot.Junit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +42,30 @@ public class MovieControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private Movie avatarMovie;
+    private Movie titanicMovie;
+    @BeforeEach
+    public void init(){
+        avatarMovie = new Movie();
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+
+        titanicMovie = new Movie();
+        titanicMovie.setName("Titanic");
+        titanicMovie.setGenera("Romantic");
+        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
+    }
     @Test
     @DisplayName("test create new Movie Object")
     public void shouldCreateNewMovie() throws Exception {
-        Movie avatarMovie = new Movie();
+      /*  Movie avatarMovie = new Movie();
         avatarMovie.setId(1L);
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
         avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+
+       */
 
         when(movieService.save(any(Movie.class))).thenReturn(avatarMovie);
         this.mockMvc.perform(post("/movies").contentType(MediaType.APPLICATION_JSON)
@@ -63,7 +80,7 @@ public class MovieControllerTest {
     @Test
     @DisplayName("Test Controller for get All Movie Objects")
     public void shouldFetchAllMovies() throws Exception {
-        Movie avatarMovie = new Movie();
+      /*  Movie avatarMovie = new Movie();
         avatarMovie.setId(1L);
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
@@ -75,6 +92,7 @@ public class MovieControllerTest {
         titanicMovie.setGenera("Romantic");
         titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
 
+       */
         List<Movie> movieList = new ArrayList<>();
         movieList.add(avatarMovie);
         movieList.add(titanicMovie);
@@ -90,12 +108,12 @@ public class MovieControllerTest {
     @Test
     @DisplayName("Test Controller for return One Movie By Id")
     public void shouldFetchOneMovieById() throws Exception {
-        Movie avatarMovie = new Movie();
+      /*  Movie avatarMovie = new Movie();
         avatarMovie.setId(1L);
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
         avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
-
+       */
         when(movieService.getMovieById(anyLong())).thenReturn(avatarMovie);
 
         this.mockMvc.perform(get("/movies/{id}",1L))
@@ -108,11 +126,11 @@ public class MovieControllerTest {
     @Test
     @DisplayName("Test Controller for Delete Movie 'By Id'")
     public void shouldDeleteMovie() throws Exception {
-        Movie avatarMovie = new Movie();
+        /*  Movie avatarMovie = new Movie();
         avatarMovie.setId(1L);
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
-        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));*/
 
         doNothing().when(movieService).deleteMovie(anyLong());
 
@@ -124,11 +142,11 @@ public class MovieControllerTest {
     @Test
     @DisplayName("Test Controller for update Movie 'By Id'")
     public void shouldUpdateMovie() throws Exception {
-        Movie avatarMovie = new Movie();
+      /*  Movie avatarMovie = new Movie();
         avatarMovie.setId(1L);
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
-        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));*/
 
         when(movieService.updateMovie(any(Movie.class),anyLong())).thenReturn(avatarMovie);
 
