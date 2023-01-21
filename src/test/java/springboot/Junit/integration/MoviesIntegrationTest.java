@@ -15,6 +15,7 @@ import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -75,6 +76,28 @@ public class MoviesIntegrationTest {
         List<Movie> movieList = restTemplate.getForObject(baseURL,List.class);
 
         assertThat(movieList.size()).isEqualTo(2);
+    }
 
+    //////////////////////////////////////////////////////////////////////
+    @Test
+    public void shouldFetchOneMovieTest(){
+
+        Movie avatarMovie = new Movie();
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+
+        Movie titanicMovie = new Movie();
+        titanicMovie.setName("Titanic");
+        titanicMovie.setGenera("Romantic");
+        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
+
+        avatarMovie =restTemplate.postForObject(baseURL,avatarMovie, Movie.class);
+        titanicMovie = restTemplate.postForObject(baseURL,titanicMovie, Movie.class);
+
+        Movie existingMovie = restTemplate.getForObject(baseURL + "/"+ avatarMovie.getId(), Movie.class );
+
+        assertNotNull(existingMovie);
+        assertEquals("Avatar", existingMovie.getName());
     }
 }
