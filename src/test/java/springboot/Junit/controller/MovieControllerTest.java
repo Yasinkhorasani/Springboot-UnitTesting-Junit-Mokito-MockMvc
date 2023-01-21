@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -82,4 +83,22 @@ public class MovieControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()",is(movieList.size())));
     }
-}
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    @Test
+    @DisplayName("Test Controller for return One Movie By Id")
+    public void shouldFetchOneMovieById() throws Exception {
+        Movie avatarMovie = new Movie();
+        avatarMovie.setId(1L);
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        when(movieService.getMovieById(anyLong())).thenReturn(avatarMovie);
+
+        this.mockMvc.perform(get("/movies/{id}",1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",is(avatarMovie.getName())))
+                .andExpect(jsonPath("$.genera", is(avatarMovie.getGenera())));
+    }
+    }
