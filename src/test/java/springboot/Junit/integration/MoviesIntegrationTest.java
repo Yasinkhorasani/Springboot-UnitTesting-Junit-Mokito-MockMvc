@@ -24,34 +24,37 @@ public class MoviesIntegrationTest {
     @LocalServerPort
     private int port;
 
-    private String baseURL= "http://localhost";
+    private String baseURL = "http://localhost";
 
     private static RestTemplate restTemplate;
 
     @Autowired
     private MovieRepository movieRepository;
+
     @BeforeAll
-    public static void init(){
+    public static void init() {
         restTemplate = new RestTemplate();
     }
+
     @BeforeEach
-    public void beforeSetup(){
+    public void beforeSetup() {
         baseURL = baseURL + ":" + port + "/movies";
     }
+
     @AfterEach
-    public void afterSetup(){
+    public void afterSetup() {
         movieRepository.deleteAll();
     }
 
     ////////////////////////////////////////////////////////////
     @Test
-    void shouldCreateMovieTest(){
+    void shouldCreateMovieTest() {
         Movie avatarMovie = new Movie();
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
-        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
 
-        Movie newMovie =restTemplate.postForObject(baseURL,avatarMovie, Movie.class);
+        Movie newMovie = restTemplate.postForObject(baseURL, avatarMovie, Movie.class);
 
         assertNotNull(newMovie);
         assertThat(newMovie.getId()).isNotNull();
@@ -59,68 +62,94 @@ public class MoviesIntegrationTest {
 
     ////////////////////////////////////////////////////////////
     @Test
-    public void shouldFetchMovieTest(){
+    public void shouldFetchMovieTest() {
         Movie avatarMovie = new Movie();
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
-        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
 
         Movie titanicMovie = new Movie();
         titanicMovie.setName("Titanic");
         titanicMovie.setGenera("Romantic");
-        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
+        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH, 12));
 
-        restTemplate.postForObject(baseURL,avatarMovie, Movie.class);
-        restTemplate.postForObject(baseURL,titanicMovie, Movie.class);
+        restTemplate.postForObject(baseURL, avatarMovie, Movie.class);
+        restTemplate.postForObject(baseURL, titanicMovie, Movie.class);
 
-        List<Movie> movieList = restTemplate.getForObject(baseURL,List.class);
+        List<Movie> movieList = restTemplate.getForObject(baseURL, List.class);
 
         assertThat(movieList.size()).isEqualTo(2);
     }
 
     //////////////////////////////////////////////////////////////////////
     @Test
-    public void shouldFetchOneMovieTest(){
+    public void shouldFetchOneMovieTest() {
 
         Movie avatarMovie = new Movie();
         avatarMovie.setName("Avatar");
         avatarMovie.setGenera("Action");
-        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
 
         Movie titanicMovie = new Movie();
         titanicMovie.setName("Titanic");
         titanicMovie.setGenera("Romantic");
-        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
+        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH, 12));
 
-        avatarMovie =restTemplate.postForObject(baseURL,avatarMovie, Movie.class);
-        titanicMovie = restTemplate.postForObject(baseURL,titanicMovie, Movie.class);
+        avatarMovie = restTemplate.postForObject(baseURL, avatarMovie, Movie.class);
+        titanicMovie = restTemplate.postForObject(baseURL, titanicMovie, Movie.class);
 
-        Movie existingMovie = restTemplate.getForObject(baseURL + "/"+ avatarMovie.getId(), Movie.class );
+        Movie existingMovie = restTemplate.getForObject(baseURL + "/" + avatarMovie.getId(), Movie.class);
 
         assertNotNull(existingMovie);
         assertEquals("Avatar", existingMovie.getName());
     }
 
-        /////////////////////////////////////////////////////////////////////////
-        @Test
-        public void shouldDeleteMovieTest(){
-            Movie avatarMovie = new Movie();
-            avatarMovie.setName("Avatar");
-            avatarMovie.setGenera("Action");
-            avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+    /////////////////////////////////////////////////////////////////////////
+    @Test
+    public void shouldDeleteMovieTest() {
+        Movie avatarMovie = new Movie();
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
 
-            Movie titanicMovie = new Movie();
-            titanicMovie.setName("Titanic");
-            titanicMovie.setGenera("Romantic");
-            titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
+        Movie titanicMovie = new Movie();
+        titanicMovie.setName("Titanic");
+        titanicMovie.setGenera("Romantic");
+        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH, 12));
 
-            avatarMovie =restTemplate.postForObject(baseURL,avatarMovie, Movie.class);
-            titanicMovie = restTemplate.postForObject(baseURL,titanicMovie, Movie.class);
+        avatarMovie = restTemplate.postForObject(baseURL, avatarMovie, Movie.class);
+        titanicMovie = restTemplate.postForObject(baseURL, titanicMovie, Movie.class);
 
-            restTemplate.delete(baseURL+"/"+ avatarMovie.getId());
+        restTemplate.delete(baseURL + "/" + avatarMovie.getId());
 
-            int count = movieRepository.findAll().size();
+        int count = movieRepository.findAll().size();
 
-            assertEquals(1,count);
-        }
+        assertEquals(1, count);
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    @Test
+    public void shouldUpdateMovieTest() {
+        Movie avatarMovie = new Movie();
+        avatarMovie.setName("Avatar");
+        avatarMovie.setGenera("Action");
+        avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        Movie titanicMovie = new Movie();
+        titanicMovie.setName("Titanic");
+        titanicMovie.setGenera("Romantic");
+        titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH, 12));
+
+        avatarMovie = restTemplate.postForObject(baseURL, avatarMovie, Movie.class);
+        titanicMovie = restTemplate.postForObject(baseURL, titanicMovie, Movie.class);
+
+        avatarMovie.setGenera("Fantasy");
+
+        restTemplate.put(baseURL +"/{id}",avatarMovie,avatarMovie.getId());
+
+        Movie existingMovie = restTemplate.getForObject(baseURL+"/"+ avatarMovie.getId(), Movie.class);
+
+        assertNotNull(existingMovie);
+        assertEquals("Fantasy", existingMovie.getGenera());
+    }
 }
