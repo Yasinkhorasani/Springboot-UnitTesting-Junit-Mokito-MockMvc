@@ -100,4 +100,27 @@ public class MoviesIntegrationTest {
         assertNotNull(existingMovie);
         assertEquals("Avatar", existingMovie.getName());
     }
+
+        /////////////////////////////////////////////////////////////////////////
+        @Test
+        public void shouldDeleteMovieTest(){
+            Movie avatarMovie = new Movie();
+            avatarMovie.setName("Avatar");
+            avatarMovie.setGenera("Action");
+            avatarMovie.setReleaseDate(LocalDate.of(2000, Month.APRIL,22));
+
+            Movie titanicMovie = new Movie();
+            titanicMovie.setName("Titanic");
+            titanicMovie.setGenera("Romantic");
+            titanicMovie.setReleaseDate(LocalDate.of(2003, Month.MARCH,12));
+
+            avatarMovie =restTemplate.postForObject(baseURL,avatarMovie, Movie.class);
+            titanicMovie = restTemplate.postForObject(baseURL,titanicMovie, Movie.class);
+
+            restTemplate.delete(baseURL+"/"+ avatarMovie.getId());
+
+            int count = movieRepository.findAll().size();
+
+            assertEquals(1,count);
+        }
 }
